@@ -1900,7 +1900,6 @@
 
 
 import React, { useState, useEffect } from 'react'
-// import emailjs from '@emailjs/browser'; // Import EmailJS
 import { Search, TrendingDown, AlertCircle, Loader2, Sparkles, Home, Zap, ShieldCheck, Smartphone, Star, Twitter, Instagram, Facebook, ArrowRight, ArrowLeft, Lock, FileText, Mail, Cookie, Eye, Server, CheckCircle2, Send, MessageSquare } from 'lucide-react'
 
 // --- MOCK DATA (Fallback) ---
@@ -1993,7 +1992,6 @@ function App() {
     }, 400)
   }
 
-  // --- UPDATED SEARCH FUNCTION ---
   const search = async (e) => {
     e.preventDefault()
     if(!query) return
@@ -2005,15 +2003,15 @@ function App() {
         setIsTransitioning(false)
         setPairs([])
         try {
-          // CRITICAL FIX: Use Environment Variable for Production
-          // If on Vercel, use the variable. If local, use localhost.
-          const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+          // --- HARDCODED BACKEND URL ---
+          const API_URL = 'https://pricehunt-vgmt.onrender.com';
           
           const res = await fetch(`${API_URL}/search?q=${query}`)
           const data = await res.json()
           setPairs(data)
         } catch (err) {
           console.error("Search failed, falling back to demo data:", err)
+          // If backend fails (e.g. timeout), show mock data after delay
           setTimeout(() => { setPairs(DEMO_RESULTS) }, 1500)
         }
         setLoading(false)
@@ -2162,7 +2160,7 @@ function App() {
           </>
         )}
 
-        {/* --- PRIVACY POLICY (Premium Layout) --- */}
+        {/* --- PRIVACY POLICY --- */}
         {view === 'privacy' && (
             <InfoPage title="Privacy Policy" icon={<Lock size={36}/>} goHome={() => navigateTo('home')}>
                 <div className="grid gap-6">
@@ -2185,7 +2183,7 @@ function App() {
             </InfoPage>
         )}
 
-        {/* --- TERMS (Premium Layout) --- */}
+        {/* --- TERMS --- */}
         {view === 'terms' && (
             <InfoPage title="Terms of Service" icon={<FileText size={36}/>} goHome={() => navigateTo('home')}>
                 <div className="grid gap-6">
@@ -2203,7 +2201,7 @@ function App() {
             </InfoPage>
         )}
 
-        {/* --- CONTACT (UPDATED WITH NO-CODE FORM) --- */}
+        {/* --- CONTACT (FORMSUBMIT.CO) --- */}
         {view === 'contact' && (
             <InfoPage title="Contact Us" icon={<Mail size={36}/>} goHome={() => navigateTo('home')}>
                 <div className="grid md:grid-cols-2 gap-12 items-start">
@@ -2229,8 +2227,7 @@ function App() {
                         {/* Configuration Fields */}
                         <input type="hidden" name="_captcha" value="false" />
                         <input type="hidden" name="_subject" value="New PriceHunt Contact Message!" />
-                        {/* Optional: Redirect back to home after success, if running on localhost port 5173 */}
-                        <input type="hidden" name="_next" value="http://localhost:5173" />
+                        <input type="hidden" name="_next" value="https://pricehunt-vgmt.onrender.com" />
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-1">
@@ -2259,7 +2256,7 @@ function App() {
   )
 }
 
-// --- SUB-COMPONENTS FOR PRETTY INFO PAGES ---
+// --- SUB-COMPONENTS (Unchanged) ---
 function InfoPage({ title, icon, children, goHome }) {
     return (
         <div className="min-h-screen flex flex-col">
@@ -2271,11 +2268,8 @@ function InfoPage({ title, icon, children, goHome }) {
                     </button>
                 </div>
             </div>
-            
             <div className="flex-1 max-w-4xl mx-auto w-full px-4 py-12 animate-slideUp">
                 <div className="bg-white/80 backdrop-blur-md p-8 md:p-12 rounded-[2rem] shadow-2xl shadow-slate-200/50 border border-white relative overflow-hidden">
-                    
-                    {/* Header */}
                     <div className="flex items-center gap-6 mb-12 pb-8 border-b border-slate-100 relative z-10">
                         <div className="w-20 h-20 bg-gradient-to-br from-indigo-50 to-violet-50 text-indigo-600 rounded-3xl flex items-center justify-center shadow-inner border border-white">
                             {icon}
@@ -2285,20 +2279,14 @@ function InfoPage({ title, icon, children, goHome }) {
                             <p className="text-slate-400 font-medium">Last updated: November 2025</p>
                         </div>
                     </div>
-
-                    {/* Content */}
-                    <div className="relative z-10">
-                        {children}
-                    </div>
+                    <div className="relative z-10">{children}</div>
                 </div>
             </div>
-            
             <footer className="text-center py-8 text-slate-400 text-sm">© 2024 PriceHunt Inc.</footer>
         </div>
     )
 }
 
-// A pretty card for Privacy/Terms sections
 function DocSection({ title, text, icon }) {
     return (
         <div className="group p-6 rounded-2xl border border-slate-100 bg-white hover:border-indigo-100 hover:shadow-xl hover:shadow-indigo-500/5 hover:-translate-y-1 transition-all duration-300">
@@ -2330,7 +2318,6 @@ function ContactDetail({ icon, label, value }) {
 function ExternalLinkIcon({size}) { return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>}
 
 
-// --- STICKY HEADER ---
 function StickyHeader({query, setQuery, search, goHome, loading}) {
     return (
         <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-white/20 shadow-sm transition-all duration-300">
@@ -2351,7 +2338,6 @@ function StickyHeader({query, setQuery, search, goHome, loading}) {
     )
 }
 
-// --- OTHER COMPONENTS (Unchanged) ---
 function FeatureCard({ icon, title, desc, delay }) {
   return (
     <div className="bg-white/70 backdrop-blur-md border border-white/60 p-8 rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group animate-slideUp cursor-default" style={{ animationDelay: delay, animationFillMode: 'forwards', opacity: 0 }}>
