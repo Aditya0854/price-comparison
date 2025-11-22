@@ -14,7 +14,7 @@ COPY requirements.txt ./
 # 4. Install Dependencies (Node & Python)
 RUN npm install
 # We use --break-system-packages to allow installing global python packages in this specific docker environment
-RUN pip3 install -r requirements.txt --break-system-packages
+RUN pip3 install -r requirements.txt
 
 # 5. Install Playwright Browsers for Python (Ensure they are available)
 RUN playwright install chromium
